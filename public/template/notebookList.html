@@ -1,0 +1,6 @@
+<div class="modal-header">
+	<input type="text" class="form-control" ng-model="notebookFilter" placeholder="{{'NARROW_DOWN'|translate}}" />
+</div>
+<div class="modal-body list-group">
+		<a href="#" class="list-group-item" ng-click="$close(notebook)" ng-repeat="notebook in notebookList | filter:{'name':notebookFilter}">{{notebook.name}}</a>
+</div>

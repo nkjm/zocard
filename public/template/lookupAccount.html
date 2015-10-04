@@ -1,0 +1,36 @@
+<div class="modal-header">
+	<h3>{{"LOOKUP_ACCOUNT"|translate}}</h3>
+</div>
+<div class="modal-body">
+	<div style="margin-bottom:10px;">
+		<form role="form">
+	        <div class="input-group">
+	            <input type="text" class="form-control" ng-model="form.searchKey" placeholder="{{'ACCOUNT_NAME'|translate}}" />
+	            <span class="input-group-btn">
+	                <button class="btn btn-default" ng-click="lookupAccount(form.searchKey)"><span class="glyphicon glyphicon-search"></span>&nbsp;{{"SEARCH"|translate}}</button>
+	            </span>
+	        </div>
+	    </form>
+    </div>
+    <div class="alert alert-info" ng-repeat="alert in alertList">
+    	{{alert.message}}
+    </div>
+    <div ng-show="candidateAccountList.length > 0">
+    	<table class="table">
+    		<thead>
+    			<tr>
+    				<th>&nbsp;</th>
+    				<th>{{"ACCOUNT_NAME"|translate}}</th>
+    				<th>{{"CREATED_DATE"|translate}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="candidateAccount in candidateAccountList">
+					<td><a target="_blank" href="https://ap2.salesforce.com/{{candidateAccount.Id}}">{{"VIEW"|translate}}</a></td>
+					<td><a href="#" ng-click="$close(candidateAccount)">{{candidateAccount.Name}}</a></td>
+					<td>{{candidateAccount.CreatedDate | date:"yyyy/MM/dd"}}</td>
+				</tr>
+			</tbody>
+		</table>
+    </div>
+</div>

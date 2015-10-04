@@ -1,0 +1,69 @@
+<!--
+/*
+ * Copyright (c) 2015 Kazuki Nakajima
+ * Released under MIT License
+ * http://opensource.org/licenses/mit-license.php
+ */
+-->
+
+<html ng-app="zocard">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>象の名刺</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css"></link>
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="angular.min.js"></script>
+    <script type="text/javascript" src="angular-animate.min.js"></script>
+    <script type="text/javascript" src="angular-translate.min.js"></script>
+    <script type="text/javascript" src="ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="<%= canvasRequest.client.instanceUrl %>/canvas/sdk/js/<%= canvasRequest.context.environment.version.api %>/canvas-all.js"></script>
+    <script type="text/javascript" src="canvastk4ng.js"></script>
+    <script type="text/javascript" src="zocard.js"></script>
+</head>
+<body>
+
+<script>
+angular.module("zocard")
+.constant("RUNNING_MODE", "develop")
+.constant("CTL_SERVER_URL", "")
+.constant("CANVAS_REQUEST", <%- JSON.stringify(canvasRequest) %>)
+.constant("SALESFORCE_NAMESPACE", "")
+.constant("LANG", "<%= canvasRequest.context.user.language %>");
+</script>
+
+<style>
+th {
+	font-size: 80%;
+}
+.card:hover {
+	cursor: pointer;
+}
+</style>
+
+<div class="container-fluid" style="margin-top: 10px;" ng-controller="rootCtl">
+	<div style="margin-bottom: 10px;">
+		<ul class="nav nav-tabs" ng-init="root.ui.tab = 'workspace'">
+			<li role="presentation" ng-class="(root.ui.tab == 'workspace') ? 'active' : ''"><a href="#" ng-click="root.ui.tab = 'workspace'"><span class="glyphicon glyphicon-th-large"></span>&nbsp;{{"WORKSPACE" | translate}}</a></li>
+			<li role="presentation" ng-class="(root.ui.tab == 'config') ? 'active' : ''"><a href="#" ng-click="root.ui.tab = 'config'"><span class="glyphicon glyphicon-cog"></span>&nbsp;{{"SETTING" | translate}}</a></li>
+		</ul>
+	</div>
+
+	<!-- Row -->
+	<div class="row">
+
+		<!-- Workspace Tab Content -->
+		<div ng-show="root.ui.tab == 'workspace'" ng-controller="workspaceCtl">
+			<% include ../components/workspaceTab %>
+		</div><!-- Workspace Tab Content -->
+
+		<!-- Config Tab Content -->
+		<div ng-show="root.ui.tab == 'config'" ng-controller="configCtl">
+			<% include ../components/configTab %>
+		</div>
+
+	</div><!-- Row -->
+</div>
+
+</body>
+</html>

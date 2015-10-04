@@ -1,0 +1,76 @@
+<div class="col-sm-12">
+	<form class="form-horizontal">
+		<div class="form-group">
+			<label class="control-label col-sm-6">{{"CONNECTION_TO_EVERNOTE"|translate}}</label>
+			<div class="col-sm-6">
+				<p class="form-control-static" ng-if="evernote.token == null" >
+					<span style="color:#666;">{{"DISCONNECTED"|translate}}&nbsp;</span>
+					<a target="_blank" href="{{evernote.ctlServerUrl}}/evernote/oauth?salesforceUserId={{root.salesforce.getEncodedUserId()}}&salesforceToken={{root.salesforce.getEncodedToken()}}&salesforceInstanceUrl={{root.salesforce.getEncodedInstanceUrl()}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-link"></span>&nbsp;{{"CONNECT"|translate}}</a>
+				</p>
+				<p class="form-control-static" ng-if="evernote.token != null">
+					<span><b>{{"CONNECTED"|translate}} ({{"EXPIRATION"|translate}}: {{evernote.tokenExpiration | date:"yyyy/MM/dd"}}）</b></span>
+					<button class="btn btn-danger btn-xs" ng-click="deleteEvernoteToken()">{{"DISCONNECT"|translate}}</button>
+				</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-6">{{"USE_EVERNOTE_BUSINESS"|translate}}</label>
+			<div class="col-sm-6">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" ng-model="evernote.useEvernoteBusiness" ng-change="evernote.unsavedNotebook = null; evernote.savedNotebook = null"/>
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-6">{{"UNSAVED_NOTEBOOK"|translate}}</label>
+			<div class="col-sm-6">
+				<p class="form-control-static">
+					<span ng-if="evernote.unsavedNotebook.name == null" style="color:#666;">{{"NOT_SELECTED"|translate}}&nbsp;</span>
+					<span ng-if="evernote.unsavedNotebook.name != null"><span class="glyphicon glyphicon-book"></span>&nbsp;<b>{{evernote.unsavedNotebook.name}}</b></span>
+					<button class="btn btn-default btn-xs" ng-class="(evernote.token == null) ? 'disabled' : ''" ng-click="openNotebookList('unsavedNotebook')"><span class="glyphicon glyphicon-search"></span>&nbsp;{{"CHANGE"|translate}}</button>
+				</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-6">{{"SAVED_NOTEBOOK"|translate}}</label>
+			<div class="col-sm-6">
+				<p class="form-control-static">
+					<span ng-if="evernote.savedNotebook.name == null" style="color:#666;">{{"NOT_SELECTED"|translate}}&nbsp;</span>
+					<span ng-if="evernote.savedNotebook.name != null"><span class="glyphicon glyphicon-book"></span>&nbsp;<b>{{evernote.savedNotebook.name}}</b></span>
+					<button class="btn btn-default btn-xs" ng-class="(evernote.token == null) ? 'disabled' : ''" ng-click="openNotebookList('savedNotebook')"><span class="glyphicon glyphicon-search"></span>&nbsp;{{"CHANGE"|translate}}</button>
+				</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-6">{{"NUMBER_OF_NOTES_TO_RETRIEVE"|translate}}</label>
+			<div class="col-sm-6">
+				<input type="number" class="form-control" ng-model="evernote.maxNumOfNote"/>
+			</div>
+		</div>
+		<div class="form-group" ng-if="evernote.isE4SInstalled">
+			<label class="control-label col-sm-6">{{"LINK_NOTE_TO_ACCOUNT_WITH_E4S"|translate}}</label>
+			<div class="col-sm-6">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" ng-model="evernote.linkNoteToAccountWithE4S" />
+					</label>
+				</div>
+			</div>
+		</div>
+		<div class="form-group" ng-if="evernote.isE4SInstalled">
+			<label class="control-label col-sm-6">{{"LINK_NOTE_TO_CONTACT_WITH_E4S"|translate}}</label>
+			<div class="col-sm-6">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" ng-model="evernote.linkNoteToContactWithE4S" />
+					</label>
+				</div>
+			</div>
+		</div>
+		<div style="text-align:right;">
+			<button class="btn btn-primary" ng-click="updateConfig(evernote)"><span class="glyphicon glyphicon-ok"></span>&nbsp;{{"SAVE"|translate}}</button>
+		</div>
+	</form>
+</div>

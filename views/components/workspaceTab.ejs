@@ -1,0 +1,92 @@
+<!-- Alert to config -->
+<div class="col-sm-12">
+	<alert ng-if="evernote.unsavedNotebook.guid == null && evernote.token != null" type="info">{{"PLEASE_SELECT_UNSAVED_NOTEBOOK" | translate}}</alert>
+	<alert ng-if="evernote.savedNotebook.guid == null && evernote.token != null" type="info">{{"PLEASE_SELECT_SAVED_NOTEBOOK" | translate}}</alert>
+</div>
+
+<!-- Note List -->
+<div class="col-sm-2">
+	<ul class="list-group">
+		<a href="#" class="note-list-item list-group-item" ng-class="(note.guid == person.NoteGuid) ? 'active' : ''" ng-repeat="note in noteList" ng-click="selectNote(note)">
+			<h4 class="list-group-item-heading">{{note.title}}</h4>
+			<div class="list-group-item-text">{{"CREATED_DATE"|translate}} {{note.created | date:"yyyy/MM/dd"}}</div>
+		</a>
+	</ul>
+</div><!-- Note List -->
+
+<!-- Selected Note -->
+<div class="col-sm-10">
+	<div class="row" ng-show="person != null">
+
+		<!-- Card Image & Alerts -->
+		<div class="col-sm-6">
+
+			<!-- Card Image -->
+			<div style="margin-bottom:10px;">
+				<img class="card img-responsive" ng-click="openCardImage(person)" src="data:{{person.Card.mimeType}};base64,{{person.Card.data}}"/>
+			</div><!-- Card Image -->
+
+			<!-- Success message of Account has been linked -->
+			<div class="alert alert-info" ng-if="person.AccountId != null">
+				{{"LINKED_TO_FOLLOWING_ACCOUNT"|translate}} "<a target="_blank" href="{{root.salesforce.instanceUrl + '/' + person.AccountId}}" style="text-decoration:underline;">{{person.AccountName}}</a>"<br/>
+				<a href="#" ng-click="person.AccountId = null; person.AccountName = null" style="text-decoration:underline;"><span class="glyphicon glyphicon-pencil" style="font-size:80%;"></span>{{"CHANGE"|translate}}</a>
+			</div>
+
+			<!-- Alert for No Account -->
+			<div class="panel panel-info" ng-if="candidateCompanyList.length == 0 && person.AccountId == null">
+				<div class="panel-heading">
+					{{"NO_CORRESPONDING_ACCOUNT"|translate}}
+				</div>
+				<div class="panel-body">
+					<button class="btn btn-default btn-sm" ng-click="openLookupAccount()"><span class="glyphicon glyphicon-search"></span>&nbsp;{{"SELECT_FROM_EXISTING_ACCOUNT"|translate}}</button>
+					<button class="btn btn-default btn-sm" ng-click="openNewAccountForm(person.Company)"><span class="glyphicon glyphicon-plus"></span>&nbsp;{{"CREATE_NEW_ACCOUNT"|translate}}</button>
+				</div>
+			</div><!-- Alert for No Account -->
+
+			<!-- Alert for 1 Account -->
+			<div ng-if="candidateCompanyList.length == 1 && person.AccountId == null">
+				<button class="btn btn-default btn-sm" ng-click="openLookupAccount()"><span class="glyphicon glyphicon-search"></span>&nbsp;{{"SELECT_FROM_EXISTING_ACCOUNT"|translate}}</button>
+				<button class="btn btn-default btn-sm" ng-click="openNewAccountForm(person.Company)"><span class="glyphicon glyphicon-plus"></span>&nbsp;{{"CREATE_NEW_ACCOUNT"|translate}}</button>
+			</div>
+
+			<!-- Alert for Multiple Accounts -->
+			<div class="panel panel-info" ng-if="candidateCompanyList.length > 1 && person.AccountId == null">
+				<div class="panel-heading">
+					<span ng-if="root.lang == 'ja'">"{{person.Company}}"</span>{{"THERE_ARE_CORRESPONDING_ACCOUNTS_1"|translate}}{{candidateCompanyList.length}}{{"THERE_ARE_CORRESPONDING_ACCOUNTS_2"|translate}}<span ng-if="root.lang != 'ja'">{{person.Company}}{{"THERE_ARE_CORRESPONDING_ACCOUNTS_3"|translate}}</span>
+				</div>
+				<div class="list-group">
+					<a href="#" class="list-group-item" ng-click="setAccount(candidateCompany)" ng-repeat="candidateCompany in candidateCompanyList">{{candidateCompany.Name}}</a>
+					<div class="list-group-item">
+						<button class="btn btn-default btn-sm" ng-click="openLookupAccount()"><span class="glyphicon glyphicon-search"></span>&nbsp;{{"SELECT_FROM_OTHER_ACCOUNTS"|translate}}</button>
+						<button class="btn btn-default btn-sm" ng-click="openNewAccountForm(person.Company)"><span class="glyphicon glyphicon-plus"></span>&nbsp;{{"CREATE_NEW_ACCOUNT"|translate}}</button>
+					</div>
+				</div>
+			</div><!-- Alert for Multiple Accounts -->
+
+		</div><!-- Card Image & Alerts -->
+
+		<!-- Person Property -->
+		<div class="col-sm-6">
+			<form class="form-horizontal">
+				<div class="form-group" ng-class="(person.AccountId != null) ? 'has-success has-feedback' : ''">
+					<label class="col-sm-2 control-label">{{"ACCOUNT"|translate}}</label>
+					<div class="col-sm-10">
+						<input type="text" class="form-control" ng-model="person.AccountName" readonly></input>
+						<span ng-show="person.AccountId != null" class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+					</div>
+				</div>
+				<div class="form-group" ng-repeat="field in personFieldList">
+					<label class="col-sm-2 control-label">{{field.label}}</label>
+					<div class="col-sm-10">
+						<input tabindex="{{$index + 1}}" type="{{field.type}}" class="form-control" ng-model="person[field.name]" ng-blur="checkPersonFieldValue(field.name, person[field.name])"></input>
+					</div>
+				</div>
+				<div style="text-align:right;">
+					<button tabindex="{{personFieldList.length + 1}}" class="btn btn-default" ng-click="makeNoteSaved(selectedNote.guid, selectedNote.title)"><span class="glyphicon glyphicon-fast-forward"></span>&nbsp;{{"MAKE_IT_PROCESSED"|translate}}</button>
+					<button tabindex="{{personFieldList.length + 2}}" class="btn btn-primary" ng-click="savePerson(person, selectedNote)"><span class="glyphicon glyphicon-ok"></span>&nbsp;{{"SAVE"|translate}}</button>
+				</div>
+			</form>
+		</div><!-- Person Property -->
+
+	</div><!-- Row -->
+</div><!-- Selected Note -->

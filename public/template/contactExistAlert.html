@@ -1,0 +1,24 @@
+<!-- Alert for Contact -->
+<div class="modal-body">
+	<div class="panel panel-warning">
+		<div class="panel-heading">
+			<span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;{{"THERE_ARE_FOLLOWING_CONTACTS"|translate}}
+		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>{{"ACCOUNT"|translate}}</th>
+					<th>{{"FULLNAME"|translate}}</th>
+					<th>{{"CREATED_DATE"|translate}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="candidatePerson in candidatePersonList">
+					<td><a target="_blank" href="{{salesforceInstanceUrl + '/' + candidatePerson.Account.Id}}">{{candidatePerson.Account.Name}}</a></td>
+					<td><a target="_blank" href="{{salesforceInstanceUrl + '/' + candidatePerson.Id}}">{{candidatePerson.Name}}</a></td>
+					<td>{{candidatePerson.CreatedDate | date:"yyyy/MM/dd"}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div><!-- Alert for Contact -->
